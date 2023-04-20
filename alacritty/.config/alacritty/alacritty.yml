@@ -1,0 +1,4 @@
+window:
+  opacity: .9
+import:
+  - ~/.config/alacritty/dracula.yml
