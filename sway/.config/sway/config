@@ -23,7 +23,7 @@ set $menu  fuzzel | dmenu_path | dmenu | xargs swaymsg exec --
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /home/blake/Pictures/Wallpapers/ed7a0b8a09149289091eb2e4c38148eb.png fill
+# output * bg /home/blake/Pictures/Wallpapers/ed7a0b8a09149289091eb2e4c38148eb.png fill
 
 #
 # Example configuration:
@@ -260,7 +260,7 @@ for_window [app_id="firefox" title="^Picture-in-Picture$"] \
 default_border pixel
 default_floating_border pixel
 smart_borders  on
-# font pango:monospace 0
+font pango:CaskaydiaCove Nerd Font Mono 10
 # titlebar_padding 1
 # titlebar_border_thickness 0
 
