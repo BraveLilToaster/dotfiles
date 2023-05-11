@@ -65,6 +65,9 @@ require('packer').startup(function(use)
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
+  -- VimWiki
+  use 'vimwiki/vimwiki'
+
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
   if has_plugins then
@@ -75,6 +78,8 @@ require('packer').startup(function(use)
     require('packer').sync()
   end
 end)
+
+vim.g.vimwiki_list = { { path = '~/Sync/Zettle', syntax = 'markdown', ext = '.md' } }
 
 -- When we are bootstrapping a configuration, it doesn't
 -- make sense to execute the rest of the init.lua.
