@@ -1,0 +1,9 @@
+profile default {
+  output eDP-1 enable scale 2 position 0,0
+}
+
+profile HomeDesk {
+  output eDP-1 disable
+  output "Dell Inc. S2418H/HX 6XH3W73LD9LL" mode 1920x1080 position 0,0
+  output "Acer Technologies S240HL LU50D0128536" mode 1920x1080 position 1920,0
+}

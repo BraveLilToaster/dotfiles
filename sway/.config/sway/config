@@ -37,9 +37,9 @@ set $menu  fuzzel | dmenu_path | dmenu | xargs swaymsg exec --
 # Example configuration:
 #
 exec swayidle -w \
-	timeout 300 'swaylock -f -c 000000' \
+	timeout 300 'swaylock' \
         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-        before-sleep 'swaylock -f -c 000000'
+        before-sleep 'swaylock'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -192,48 +192,75 @@ exec swayidle -w \
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
-#
-#
-#
 
-# Set shut down, restart and locking features
-bindsym $mod+Shift+P mode "$mode_system"
-set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
-mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym s exec --no-startup-id systemctl suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
-    bindsym r exec --no-startup-id i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
-
-    # exit system mode: "Enter" or "Escape"
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+#
+# Nag bar
+#
+set {
+    $nag            exec swaynagmode
+    $nag_exit       $nag --exit
+    $nag_confirm    $nag --confirm
+    $nag_select     $nag --select
+    $nag_exit_cmd   exec --no-startup-id swaynagmode --exit &&
 }
-#
+mode "nag" {
+    bindsym {
+        Ctrl+d    mode "default"
+
+        l         $nag_exit_cmd swaylock
+        s         $nag_exit_cmd systemctl suspend
+        # u         exec --no-startup-id swaylock
+        # e         exec --no-startup-id swaylock
+        # h         exec --no-startup-id swaylock
+        r         exec --no-startup-id reboot
+        Shift+s   exec --no-startup-id shutdown
+
+
+        Ctrl+c    $nag_exit
+        q         $nag_exit
+        Escape    $nag_exit
+
+        Return    $nag_confirm
+
+        Tab       $nag_select prev
+        Shift+Tab $nag_select next
+
+        Left      $nag_select next
+        Right     $nag_select prev
+
+        Up        $nag_select next
+        Down      $nag_select prev
+    }
+}
+bindsym {
+    $mod+Shift+p $nag -t "warning" -m "(l)ock | (e)xit | switch_(u)ser | (s)uspend | (h)ibernate | (r)eboot | (Shift+s)hutdown" -b "Exit" "swaymsg exit" -b "Reload" "swaymsg reload"
+}
+# -R is recommended for swaynag_command so that, upon a syntax error in your sway config, the
+# 'Reload Sway' option will be initially selected instead of the 'Exit Sway' option
+exec swaynag_command $nag -R
+
+
 # Resizing containers:
 #
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
+# left will shrink the containers width
+# right will grow the containers width
+# up will shrink the containers height
+# down will grow the containers height
     bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
 
-    # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
+# Ditto, with arrow keys
+        bindsym Left resize shrink width 10px
+        bindsym Down resize grow height 10px
+        bindsym Up resize shrink height 10px
+        bindsym Right resize grow width 10px
 
-    # Return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+# Return to default mode
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
 
@@ -242,7 +269,7 @@ bindsym $mod+r mode "resize"
 #
 # Read `man 5 sway-bar` for more information about this section.
 bar {
-	swaybar_command waybar
+    swaybar_command waybar
 }
 
 floating_modifier	$mod		normal
@@ -257,12 +284,15 @@ smart_gaps on
 for_window [app_id="firefox" title="^Picture-in-Picture$"] \
     floating enable, move position 1400 700, resize set width 40 ppt height 44 ppt, sticky enable
 
-default_border pixel
-default_floating_border pixel
-smart_borders  on
-font pango:CaskaydiaCove Nerd Font Mono 10
+    default_border pixel
+    default_floating_border pixel
+    smart_borders  on
+    font pango:CaskaydiaCove Nerd Font Mono 10
 # titlebar_padding 1
 # titlebar_border_thickness 0
+
+# Dynamic Display Configuration 
+exec kanshi
 
 # Notification Daemon
 exec swaync
