@@ -150,7 +150,7 @@ exec swayidle -w \
 
     # Move workspace to different output
     bindsym $mod+Shift+Tab move workspace to output right
-    bindsym $mod+Alt+Shift+Tab move workspace to output left
+    bindsym $mod+Alt+Shift+Tab exec "swaymsg -t get_outputs |jq '[.[] | select(.active == true)] | .[(map(.focused) | index(true) + 1) % length].name' |xargs swaymsg move workspace to"
     bindsym $mod+Control+Shift+Right move workspace to output right
     bindsym $mod+Control+Shift+Left move workspace to output left
     bindsym $mod+Control+Shift+Down move workspace to output down
@@ -210,7 +210,7 @@ mode "nag" {
         l         $nag_exit_cmd swaylock
         s         $nag_exit_cmd systemctl suspend
         # u         exec --no-startup-id swaylock
-        # e         exec --no-startup-id swaylock
+        e         exec --no-startup-id swaymsg exit
         # h         exec --no-startup-id swaylock
         r         exec --no-startup-id reboot
         Shift+s   exec --no-startup-id shutdown
